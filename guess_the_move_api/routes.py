@@ -95,6 +95,7 @@ def evaluate_move():
         # Check if the move is in legal moves.
         if move in board.legal_moves:
             # Make a move with the variation (user)
+            # Can replace with push_uci or even push_san
             board.push(move)
         else:
             # Return an error if not
@@ -193,7 +194,7 @@ def evaluate_move():
 def report_card():
     # Remove all the new line charcters from the pgn string
     # pgn_string = pgn_string.replace("\n", "")
-     # Get the values from the request
+    # Get the values from the request
     request_data = request.get_json()
     game_id = request_data['game_id']
     # Query the DB to get a game with this ID
@@ -201,10 +202,12 @@ def report_card():
     # If that game doesn't exist, send an error message 
     if game_db == None:
         return jsonify({"msg": 'Game Not Found'}), 400
+    if game_db.fen != 'Game Finished':
+        return jsonify({"msg": 'Game Not Finished'}), 400
     report_dict = {}
     report_dict['pgn'] = game_db.pgn
     report_dict['inaccuracies'] = game_db.inaccuracy
     report_dict['mistakes'] = game_db.mistake
     report_dict['blunders'] = game_db.blunder
-    report_dict['avgCentipawnDifference'] = game_db.difference
+    report_dict['avg_difference'] = game_db.difference
     return jsonify(report_dict)
