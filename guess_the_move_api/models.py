@@ -2,6 +2,7 @@ from guess_the_move_api import db
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    uuid = db.Column(db.String(36), nullable=False)
     pgn = db.Column(db.Text, nullable=False)
     color = db.Column(db.Boolean, nullable=False)
     fen = db.Column(db.String(100), nullable=False)

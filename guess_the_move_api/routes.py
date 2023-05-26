@@ -1,5 +1,5 @@
 from flask import request, jsonify
-import io, chess.pgn, math
+import io, chess.pgn, math, uuid
 from guess_the_move_api.models import Game
 from guess_the_move_api import app, db, stockfish
 
@@ -32,7 +32,8 @@ def validate_pgn():
         return jsonify({"msg": str(error1)}), 400
     fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     # Add pgn, color and starting fen to the DB 
-    game_db = Game(pgn=text_pgn, color=bool_color, fen=fen)
+    game_uuid = str(uuid.uuid4())
+    game_db = Game(pgn=text_pgn, color=bool_color, fen=fen, uuid=game_uuid)
     db.session.add(game_db)
     db.session.commit()
     # Create a dict, add ID of the game to it and return as JSON.
