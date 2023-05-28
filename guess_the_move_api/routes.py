@@ -38,7 +38,7 @@ def validate_pgn():
     db.session.commit()
     # Create a dict, add ID of the game to it and return as JSON.
     id_dict = {}
-    id_dict['id'] = game_db.id
+    id_dict['id'] = game_db.uuid
     return jsonify(id_dict)
 
 @app.route('/evaluate_move', methods=['POST'])
@@ -48,7 +48,7 @@ def evaluate_move():
     game_id = request_data['game_id']
     user_move = request_data['user_move']
     # Query the DB to get a game with this ID
-    game_db = Game.query.filter_by(id=game_id).first()
+    game_db = Game.query.filter_by(uuid=game_id).first()
     # If that game doesn't exist, send an error message 
     if game_db == None:
         return jsonify({"msg": 'Game Not Found'}), 400
@@ -199,7 +199,7 @@ def report_card():
     request_data = request.get_json()
     game_id = request_data['game_id']
     # Query the DB to get a game with this ID
-    game_db = Game.query.filter_by(id=game_id).first()
+    game_db = Game.query.filter_by(uuid=game_id).first()
     # If that game doesn't exist, send an error message 
     if game_db == None:
         return jsonify({"msg": 'Game Not Found'}), 400
