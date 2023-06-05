@@ -3,7 +3,7 @@ import io, chess.pgn, math, uuid
 from guess_the_move_api.models import Game
 from guess_the_move_api import app, db, stockfish
 
-#test5
+#test6
 def calculate_win_chances(eval):
     win_chances = 2 / (1 + math.exp(-0.004 * eval)) - 1
     return win_chances
