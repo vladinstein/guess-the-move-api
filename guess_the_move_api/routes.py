@@ -191,6 +191,24 @@ def evaluate_move():
     eval_dict['inaccuracy'] = inaccuracy
     return jsonify(eval_dict)
 
+@app.route('/page_refresh', methods=['POST'])
+def page_refresh():
+    # Get the values from the request
+    request_data = request.get_json()
+    game_id = request_data['game_id']
+    # Query the DB to get a game with this ID
+    game_db = Game.query.filter_by(uuid=game_id).first()
+    # If that game doesn't exist, send an error message 
+    if game_db == None:
+        return jsonify({"msg": 'Game Not Found'}), 400
+    # If that game has already finished, send an error response
+    if game_db.fen == 'Game Finished':
+        return jsonify({"msg": 'Game Finished'}), 400
+    # Turn pgn to StringIO object (required by the library)
+    fen_dict = {}
+    fen_dict['fen'] = game_db.fen
+    return jsonify(fen_dict)
+
 @app.route('/report_card', methods=['POST'])
 def report_card():
     # Remove all the new line charcters from the pgn string
