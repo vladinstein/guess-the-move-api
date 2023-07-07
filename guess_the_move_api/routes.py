@@ -204,9 +204,13 @@ def page_refresh():
     # If that game has already finished, send an error response
     if game_db.fen == 'Game Finished':
         return jsonify({"msg": 'Game Finished'}), 400
-    # Turn pgn to StringIO object (required by the library)
+    # Get the full move number from the fen.
+    full_moves = game_db.fen.split()[-1]
     fen_dict = {}
+    # Return pgn, fen and full move number.
+    fen_dict['pgn'] = game_db.pgn
     fen_dict['fen'] = game_db.fen
+    fen_dict['full_moves'] = full_moves
     return jsonify(fen_dict)
 
 @app.route('/report_card', methods=['POST'])
